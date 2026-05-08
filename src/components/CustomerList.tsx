@@ -4,6 +4,7 @@ import { type ColDef } from "ag-grid-community";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-material.css";
 import AddCustomer from "./AddCustomer";
+import AddTraining from "./AddTraining";
 
 // asiakkaan tyyppimäärittely
 export interface Customer {
@@ -12,6 +13,12 @@ export interface Customer {
   email: string;
   phone: string;
   city: string;
+  // Lisätty _links, jotta saamme asiakkaan url:n harjoituksen lisäämistä varten
+  _links?: {
+    customer: {
+      href: string;
+    };
+  };
 }
 
 export default function CustomerList() {
@@ -49,8 +56,43 @@ export default function CustomerList() {
       })
       .catch((err) => console.error(err));
   };
-  // tyypittää sarakemäärittelyn
+
+  // uuden harjoutuksen tallentaminen
+  const saveTraining = (newTraining: any) => {
+    fetch(
+      "https://customer-rest-service-frontend-personaltrainer.2.rahtiapp.fi/api/trainings",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(newTraining),
+      },
+    )
+      .then((res) => {
+        if (res.ok) {
+          alert("Harjoitus lisätty onnistuneesti!");
+        } else {
+          alert("Virhe harjoituksen tallennuksessa");
+        }
+      })
+      .catch((err) => console.error(err));
+  };
+
   const [columnDefs] = useState<ColDef<Customer>[]>([
+    {
+      headerName: "",
+      width: 250, // leveyden nosto korjaa lisää harjoitusnapin menemisen seuraavan sarakkeen alle, ei väliä sillä tehtävässä ei katsota UI:n ulkomuotoa
+      cellRenderer: (params: any) => {
+        if (params.data && params.data._links && params.data._links.self) {
+          return (
+            <AddTraining
+              customerHref={params.data._links.customer.href}
+              saveTraining={saveTraining}
+            />
+          );
+        }
+        return null;
+      },
+    },
     { field: "firstname", headerName: "Etunimi", sortable: true, filter: true },
     { field: "lastname", headerName: "Sukunimi", sortable: true, filter: true },
     { field: "city", headerName: "Kaupunki", sortable: true, filter: true },
