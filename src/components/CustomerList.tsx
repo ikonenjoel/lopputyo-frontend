@@ -3,6 +3,7 @@ import { AgGridReact } from "ag-grid-react";
 import { type ColDef } from "ag-grid-community";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-material.css";
+import AddCustomer from "./AddCustomer";
 
 // asiakkaan tyyppimäärittely
 export interface Customer {
@@ -29,13 +30,32 @@ export default function CustomerList() {
       .catch((err) => console.error("Virhe haettaessa asiakkaita", err));
   };
 
+  // uuden asiakkaan tallentaminen tietokantaan
+  const saveCustomer = (newCustomer: Customer) => {
+    fetch(
+      "https://customer-rest-service-frontend-personaltrainer.2.rahtiapp.fi/api/customers",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(newCustomer),
+      },
+    )
+      .then((res) => {
+        if (res.ok) {
+          fetchCustomers();
+        } else {
+          alert("Jokin meni pieleen");
+        }
+      })
+      .catch((err) => console.error(err));
+  };
   // tyypittää sarakemäärittelyn
   const [columnDefs] = useState<ColDef<Customer>[]>([
     { field: "firstname", headerName: "Etunimi", sortable: true, filter: true },
     { field: "lastname", headerName: "Sukunimi", sortable: true, filter: true },
+    { field: "city", headerName: "Kaupunki", sortable: true, filter: true },
     { field: "email", headerName: "Sähköposti", sortable: true, filter: true },
     { field: "phone", headerName: "Puhelin", sortable: true, filter: true },
-    { field: "city", headerName: "Kaupunki", sortable: true, filter: true },
   ]);
 
   return (
@@ -44,7 +64,10 @@ export default function CustomerList() {
       style={{ height: 600, width: "90%", margin: "auto" }}
     >
       <h2>Asiakkaat</h2>
-      <AgGridReact
+
+      <AddCustomer saveCustomer={saveCustomer} />
+
+      <AgGridReact<Customer>
         rowData={customers}
         columnDefs={columnDefs}
         pagination={true}
