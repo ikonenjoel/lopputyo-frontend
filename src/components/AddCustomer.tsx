@@ -19,7 +19,9 @@ export default function AddCustomer({ saveCustomer }: AddCustomerProps) {
     firstname: "",
     lastname: "",
     email: "",
+    streetaddress: "",
     phone: "",
+    postcode: "",
     city: "",
   });
 
@@ -39,7 +41,9 @@ export default function AddCustomer({ saveCustomer }: AddCustomerProps) {
       firstname: "",
       lastname: "",
       email: "",
+      streetaddress: "",
       phone: "",
+      postcode: "",
       city: "",
     });
   };
@@ -87,6 +91,24 @@ export default function AddCustomer({ saveCustomer }: AddCustomerProps) {
             value={customer.phone}
             onChange={(e) =>
               setCustomer({ ...customer, phone: e.target.value })
+            }
+          />
+          <TextField
+            margin="dense"
+            label="Osoite"
+            fullWidth
+            value={customer.streetaddress}
+            onChange={(e) =>
+              setCustomer({ ...customer, streetaddress: e.target.value })
+            }
+          />
+          <TextField
+            margin="dense"
+            label="Postinumero"
+            fullWidth
+            value={customer.postcode}
+            onChange={(e) =>
+              setCustomer({ ...customer, postcode: e.target.value })
             }
           />
           <TextField

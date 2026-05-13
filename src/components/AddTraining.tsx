@@ -37,7 +37,7 @@ export default function AddTraining({
     const newTraining = {
       ...training,
       date: training.date.toISOString(),
-      duration: Number(training.duration),
+      duration: Number(training.duration), //varmistaa, että aika on numero
     };
 
     saveTraining(newTraining);

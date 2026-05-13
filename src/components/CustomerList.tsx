@@ -13,6 +13,8 @@ export interface Customer {
   email: string;
   phone: string;
   city: string;
+  postcode: string;
+  streetaddress: string;
   // Lisätty _links, jotta saamme asiakkaan url:n harjoituksen lisäämistä varten
   _links?: {
     customer: {
@@ -98,6 +100,18 @@ export default function CustomerList() {
     { field: "city", headerName: "Kaupunki", sortable: true, filter: true },
     { field: "email", headerName: "Sähköposti", sortable: true, filter: true },
     { field: "phone", headerName: "Puhelin", sortable: true, filter: true },
+    {
+      field: "streetaddress",
+      headerName: "Osoite",
+      sortable: true,
+      filter: true,
+    },
+    {
+      field: "postcode",
+      headerName: "Postinumero",
+      sortable: true,
+      filter: true,
+    },
   ]);
 
   return (
